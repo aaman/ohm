@@ -141,20 +141,20 @@ module Ohm
       data = nil
 
       model.synchronize do
-        ids.each do |id|
-          redis.queue("HGETALL", namespace[id])
+        data = redis.pipelined do |pipeline|
+          ids.each do |id|
+            pipeline.hgetall(namespace[id])
+          end
         end
-
-        data = redis.commit
       end
-
-      return [] if data.nil?
 
       [].tap do |result|
         data.each_with_index do |atts, idx|
-          result << model.new(Utils.dict(atts).update(:id => ids[idx]))
-        end
-      end
+           puts "\n\n\#id #{ids.inspect}\n\n"
+           #result << model.new(Utils.dict(atts).update(:id => ids[idx]))
+            result << model.new(atts).update(:id => ids[idx]);
+         end
+       end
     end
   end
 
