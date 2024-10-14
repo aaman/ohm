@@ -152,7 +152,7 @@ module Ohm
         data.each_with_index do |atts, idx|
            puts "\n\n\#id #{ids.inspect}\n\n"
            #result << model.new(Utils.dict(atts).update(:id => ids[idx]))
-            result << model.new(atts).update(:id => ids[idx]);
+            result << model.new(atts.update(:id => ids[idx]));
          end
        end
     end
